@@ -31,6 +31,8 @@ This repository provides scripts for running YOLOv8-based face and object detect
 
 ### 0. Setup the Pi and hook it up to the monitors and make sure the display is working.
 
+# Disclaimer: IF YOU HAVE ALREADY FORKED it click on Update branch in your sync functionality of the git and in terminal go to the folder that ypou cloned into a say git pull
+
 ### 1. System Preparation
 Open a terminal and execute the following commands in order:
 
