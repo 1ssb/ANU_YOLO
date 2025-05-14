@@ -19,25 +19,27 @@ case "$ARCH" in
   *)       echo "❌ Unsupported arch: $ARCH" >&2; exit 1 ;;
 esac
 
+# 2) Install Miniforge if needed
 if [[ -x "$MINIFORGE_DIR/bin/conda" ]]; then
   echo "✅ Miniforge already installed in $MINIFORGE_DIR"
 else
-  echo "⬇️ 2) Downloading Miniforge ($PKG)…"
+  echo "⬇️ Downloading Miniforge ($PKG)…"
   wget -q "https://github.com/conda-forge/miniforge/releases/latest/download/$PKG" -O /tmp/miniforge.sh
-  echo "⚙️ 3) Installing to $MINIFORGE_DIR…"
+  echo "⚙️ Installing to $MINIFORGE_DIR…"
   bash /tmp/miniforge.sh -b -p "$MINIFORGE_DIR"
 fi
 
 echo
-echo "🔧 4) Creating global hook in /etc/profile.d/conda.sh…"
-sudo tee /etc/profile.d/conda.sh >/dev/null <<'EOF'
+# 3) Write the profile.d hook with expanded variables
+echo "🔧 Creating /etc/profile.d/conda.sh…"
+sudo tee /etc/profile.d/conda.sh > /dev/null <<EOF
 # >>> conda initialize >>>
-__conda_setup="$('"$HOME"'/miniforge/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
+__conda_setup="\$("$MINIFORGE_DIR/bin/conda" shell.bash hook 2> /dev/null)"
+if [ \$? -eq 0 ]; then
+  eval "\$__conda_setup"
 else
-  if [ -f '"$HOME"'/miniforge/etc/profile.d/conda.sh ]; then
-    . '"$HOME"'/miniforge/etc/profile.d/conda.sh
+  if [ -f "$MINIFORGE_DIR/etc/profile.d/conda.sh" ]; then
+    . "$MINIFORGE_DIR/etc/profile.d/conda.sh"
   fi
 fi
 unset __conda_setup
@@ -46,15 +48,17 @@ EOF
 sudo chmod +x /etc/profile.d/conda.sh
 
 echo
-echo "🐍 5) Initializing Conda for current session…"
-# set up current shell
+# 4) Activate conda in this session
+echo "🐍 Initializing Conda for current session…"
+# this will define `conda` for the remainder of the script
 eval "$("$MINIFORGE_DIR/bin/conda" shell.bash hook)"
 
 echo
+# 5) Create the 'yolo' environment if it doesn't exist
 if conda env list | grep -qE "^\s*$ENV_NAME\s"; then
   echo "✅ Conda env '$ENV_NAME' already exists"
 else
-  echo "🚀 6) Creating '$ENV_NAME' (Python $PYTHON_VER)…"
+  echo "🚀 Creating env '$ENV_NAME' (Python $PYTHON_VER)…"
   conda create -n "$ENV_NAME" python="$PYTHON_VER" -y
   echo "📦 Installing PyTorch (CPU), torchvision & OpenCV…"
   conda activate "$ENV_NAME"
