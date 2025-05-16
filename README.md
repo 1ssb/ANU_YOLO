@@ -21,10 +21,68 @@ This repository provides scripts for running YOLOv8-based face and object detect
 ### Preparation
 
 ```bash
-# Raspberry Pi OS — 3-liner, no venv: install Python tooling, cv2, Ultralytics YOLO, Requests, and make ~/.local/bin permanent
-sudo apt update && sudo apt install -y python3 python3-pip build-essential libjpeg-dev zlib1g-dev libatlas-base-dev libopenblas-dev
-python3 -m pip install --upgrade --user pip && pip install --user opencv-python ultralytics requests        # cv2 & yolo CLI go to ~/.local/bin
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && exec "$SHELL" -l                                # add to .bashrc and reload shell
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# 1) System update & upgrade
+echo "1) Updating system…"
+sudo apt-get update -qq
+sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq
+
+# 2) Repair any broken packages
+echo "2) Repairing broken packages…"
+sudo apt-get install -f -y -qq
+sudo dpkg --configure -a -qq
+
+# 3) Install prerequisites
+echo "3) Installing prerequisites…"
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+    curl wget unzip bzip2 build-essential cmake \
+    libjpeg-dev libpng-dev libtiff-dev \
+    libavcodec-dev libavformat-dev libswscale-dev ffmpeg \
+    git ca-certificates
+
+# 4) Clean up
+echo "4) Cleaning up…"
+sudo apt-get autoremove -y -qq
+sudo apt-get autoclean -y -qq
+
+# 5) Keyboard layout → US
+echo "5) Setting keyboard layout to US…"
+sudo sed -i 's/^XKBLAYOUT=.*/XKBLAYOUT="us"/' /etc/default/keyboard
+sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -fnoninteractive keyboard-configuration
+sudo udevadm trigger --subsystem-match=input --action=change
+
+# 6) Python tooling & Ultralytics YOLO (no venv)
+echo "6) Installing Python tooling & YOLO…"
+sudo apt-get install -y -qq python3 python3-pip libatlas-base-dev libopenblas-dev
+python3 -m pip install --upgrade --user pip >/dev/null
+pip install --user numpy ultralytics requests >/dev/null
+
+# 7) Ensure ~/.local/bin is on PATH
+PROFILE="$HOME/.bashrc"
+LINE='export PATH="$HOME/.local/bin:$PATH"'
+if ! grep -Fxq "$LINE" "$PROFILE"; then
+  echo "$LINE" >> "$PROFILE"
+fi
+
+# 8) Verify pip functionality by installing and importing numpy
+echo "8) Verifying pip can install & import numpy…"
+if python3 -c "import numpy" &> /dev/null; then
+  echo "pip check passed: rebooting now…"
+  sudo reboot
+else
+  echo "numpy not found, attempting install…" >&2
+  if pip install --user opencv-python >/dev/null && python3 -c "import opencv-python" &> /dev/null; then
+    echo "pip check passed after install: rebooting now…"
+    sudo reboot
+  else
+    echo "ERROR: pip failed to install or import numpy." >&2
+    exit 1
+  fi
+fi
+
 ```
 ---
 
