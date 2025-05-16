@@ -18,76 +18,14 @@ A collection of YOLO-based scripts and environment setups for face and object de
 ## Project Overview
 This repository provides scripts for running YOLOv8-based face and object detection on images and videos. The main scripts, `object.py` and `yolo_face.py`, detects objects and faces using a YOLOv8n model and its retrained model and outputs annotated images or videos with bounding boxes and confidence scores, respectively. This introduces the newcomer to various ML concepts.
 
----
-
-## Prerequisites
-- Raspberry Pi OS or any modern Linux distribution
-- Python 3.10 or higher (recommended: use Micromamba/Miniconda)
-- Git
-
----
-
-## Installation
-
-### 0. Setup the Pi and hook it up to the monitors and make sure the display is working.
-
-# Disclaimer: IF YOU HAVE ALREADY FORKED it click on Update branch in your sync functionality of the git and in terminal go to the folder that you cloned into and run the command: `git pull`
-
-### 1. System Preparation
-Open a terminal and execute the following commands in order:
+### Preparation
 
 ```bash
-echo "1) Update & upgrade system…"
-sudo apt-get update -qq
-sudo apt-get upgrade -y -qq
-
-echo "2) Repair broken packages (if any)…"
-sudo apt-get install -f -y -qq
-sudo dpkg --configure -a
-
-echo "3) Install core prerequisites: curl, unzip, compilers, media libs…"
-sudo apt-get install -y -qq \
-    curl unzip wget bzip2 build-essential cmake \
-    libjpeg-dev libpng-dev libtiff-dev \
-    libavcodec-dev libavformat-dev libswscale-dev ffmpeg \
-    git ca-certificates
-
-echo "4) Clean up unused packages & caches…"
-sudo apt-get autoremove -y -qq
-sudo apt-get autoclean -y -qq
-
-echo "5) Ensure no broken dpkg state remains…"
-sudo dpkg --configure -a
-sudo apt-get install -f -y -qq
-
-echo "6) Switch keyboard layout to US…"
-sudo sed -i 's/^XKBLAYOUT=.*/XKBLAYOUT="us"/' /etc/default/keyboard
-sudo DEBIAN_FRONTEND=noninteractive dpkg-reconfigure keyboard-configuration
-sudo udevadm trigger --subsystem-match=input --action=change
-sudo reboot
+# Raspberry Pi OS — 3-liner, no venv: install Python tooling, cv2, Ultralytics YOLO, Requests, and make ~/.local/bin permanent
+sudo apt update && sudo apt install -y python3 python3-pip build-essential libjpeg-dev zlib1g-dev libatlas-base-dev libopenblas-dev
+python3 -m pip install --upgrade --user pip && pip install --user opencv-python ultralytics requests        # cv2 & yolo CLI go to ~/.local/bin
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && exec "$SHELL" -l                                # add to .bashrc and reload shell
 ```
-
-After rebooting, continue with the steps below.
-
-### 2. Clone the Repository and Set Up the Environment
-
-```bash
-git clone https://www.github.com/<your_username>/ANU_YOLO
-cd ANU_YOLO
-chmod +x install_env.sh
-./install_env.sh # Installs Miniconda and everything that you do not need to worry about
-```
-
-This script will install most required dependencies automatically.
-
-### 3. (Optional) Create a Conda Environment
-
-```bash
-conda create -n yolo python=3.10
-conda activate yolo
-pip install opencv-python ultralytics face-recognition
-```
-
 ---
 
 ## Model Weights
