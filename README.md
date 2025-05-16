@@ -88,7 +88,27 @@ fi
 ```
 
 ###### Error that I made was upgrading your systems but most of you di dnot complete it so it might have broken things. You should not need conda or any other packages/containers.
+###### For those who have already forked the repo and need to update it to the current state of this repo:
 
+```bash
+# 1. Change directory to your local repository
+cd ANU_YOLO
+
+# 2. Add the original repository as an upstream remote (do this only once)
+git remote add upstream https://github.com/1ssb/ANU_YOLO.git
+
+# 3. Fetch changes from the upstream repo
+git fetch upstream
+
+# 4. Checkout your main branch (replace 'main' with your branch name if different)
+git checkout main
+
+# 5. Merge changes from upstream/main into your local main branch
+git merge upstream/main
+
+# 6. Push the updated main branch to your fork on GitHub
+git push origin main
+```
 ---
 
 ## Model Weights
@@ -101,6 +121,12 @@ Place the downloaded weights file (e.g., `yolov8n-face-lindevs.pt`) in the proje
 ---
 
 ## Usage
+
+### Object Detection
+
+```bash
+python object.py --source bus.jpg --output bus_objects.jpg
+```
 
 ### Face Detection on Images
 
@@ -117,6 +143,14 @@ python yolo_face.py --source path/to/video.mp4 --output path/to/output.mp4
 ```
 - Input: Any video file
 - Output: Annotated video with detected faces
+
+### Streamer
+
+```bash
+python stream.py
+```
+
+This should open the webcam interface if you attach one.
 
 ---
 
