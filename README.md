@@ -27,17 +27,17 @@ IFS=$'\n\t'
 
 # 1) System update & upgrade
 echo "1) Updating system…"
-sudo apt-get update -qq
-sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y -qq
+sudo apt-get update
+sudo DEBIAN_FRONTEND=noninteractive apt-get upgrade -y
 
 # 2) Repair any broken packages
 echo "2) Repairing broken packages…"
-sudo apt-get install -f -y -qq
-sudo dpkg --configure -a -qq
+sudo apt-get install -f -y
+sudo dpkg --configure -a
 
 # 3) Install prerequisites
 echo "3) Installing prerequisites…"
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
     curl wget unzip bzip2 build-essential cmake \
     libjpeg-dev libpng-dev libtiff-dev \
     libavcodec-dev libavformat-dev libswscale-dev ffmpeg \
@@ -45,8 +45,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
 
 # 4) Clean up
 echo "4) Cleaning up…"
-sudo apt-get autoremove -y -qq
-sudo apt-get autoclean -y -qq
+sudo apt-get autoremove -y
+sudo apt-get autoclean -y
 
 # 5) Keyboard layout → US
 echo "5) Setting keyboard layout to US…"
@@ -56,7 +56,7 @@ sudo udevadm trigger --subsystem-match=input --action=change
 
 # 6) Python tooling & Ultralytics YOLO (no venv)
 echo "6) Installing Python tooling & YOLO…"
-sudo apt-get install -y -qq python3 python3-pip libatlas-base-dev libopenblas-dev
+sudo apt-get install -y python3 python3-pip libatlas-base-dev libopenblas-dev
 python3 -m pip install --upgrade --user pip >/dev/null
 pip install --user numpy ultralytics requests >/dev/null
 
