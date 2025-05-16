@@ -20,7 +20,7 @@ This repository provides scripts for running YOLOv8-based face and object detect
 
 ### Preparation
 
-Simply copy and paste this onto the terminal and run it. If everything runs correctly the system will auto-reboot and you can reopen the terminal and everything should work including pip directly as well as python.
+Simply copy and paste this onto the terminal and run it. If everything runs correctly the system will auto-reboot and you can reopen the terminal and everything should work including pip directly as well as python. This preperation is immaterial of whether you have cloned, forked etc.
 
 ```bash
 #!/usr/bin/env bash
@@ -89,7 +89,13 @@ fi
 
 ###### Error that I made was upgrading your systems but most of you did not complete properly, so it might have broken things. You should not need conda or any other packages/containers after simply installing and changing paths.
 
-###### For those who have already forked the repo and need to update it to the current state of this repo:
+##### For those who have not cloned or forked, fork this repo and then run:
+
+```bash
+git clone https://github.com/<your_username>/ANU_YOLO.git
+cd ANU_YOLO
+```
+##### For those who have already forked the repo and need to update it to the current state of this repo:
 
 ```bash
 # 1. Change directory to your local repository
@@ -151,7 +157,7 @@ python yolo_face.py --source path/to/video.mp4 --output path/to/output.mp4
 python stream.py
 ```
 
-This should open the webcam interface if you attach one.
+This should open the webcam interface if you attach one for livestreaming the detection.
 
 ---
 
