@@ -87,7 +87,8 @@ fi
 
 ```
 
-###### Error that I made was upgrading your systems but most of you di dnot complete it so it might have broken things. You should not need conda or any other packages/containers.
+###### Error that I made was upgrading your systems but most of you did not complete properly, so it might have broken things. You should not need conda or any other packages/containers after simply installing and changing paths.
+
 ###### For those who have already forked the repo and need to update it to the current state of this repo:
 
 ```bash
