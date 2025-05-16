@@ -20,6 +20,8 @@ This repository provides scripts for running YOLOv8-based face and object detect
 
 ### Preparation
 
+Simply copy and paste this onto the terminal and run it. If everything runs correctly the system will auto-reboot and you can reopen the terminal and everything should work including pip directly as well as python.
+
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
@@ -84,6 +86,9 @@ else
 fi
 
 ```
+
+###### Error that I made was upgrading your systems but most of you di dnot complete it so it might have broken things. You should not need conda or any other packages/containers.
+
 ---
 
 ## Model Weights
